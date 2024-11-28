@@ -21,7 +21,7 @@
  /**
   * Represents a single test question
   */
- class Question {
+ /*class Question {
      private int id;
      private String text;
      private int answer;
