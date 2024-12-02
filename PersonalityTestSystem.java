@@ -16,9 +16,43 @@ public class PersonalityTestSystem {
     
     private void initializeQuestions() {
         // Sample questions (same as before)
-        questionQueue.add(new Question(1, "I am the life of the party.", PersonalityDimension.EXTROVERSION));
-        // Add all other questions...
-    }
+        
+            // Extroversion Questions
+            questionQueue.add(new Question(1, "I am the life of the party.", PersonalityDimension.EXTROVERSION));
+            questionQueue.add(new Question(6, "I don't talk a lot.", PersonalityDimension.EXTROVERSION));
+            questionQueue.add(new Question(11, "I feel comfortable around people.", PersonalityDimension.EXTROVERSION));
+            questionQueue.add(new Question(16, "I keep in the background.", PersonalityDimension.EXTROVERSION));
+            questionQueue.add(new Question(21, "I start conversations.", PersonalityDimension.EXTROVERSION));
+        
+            // Agreeableness Questions
+            questionQueue.add(new Question(2, "I feel little concern for others.", PersonalityDimension.AGREEABLENESS));
+            questionQueue.add(new Question(7, "I am interested in people.", PersonalityDimension.AGREEABLENESS));
+            questionQueue.add(new Question(12, "I insult people.", PersonalityDimension.AGREEABLENESS));
+            questionQueue.add(new Question(17, "I sympathize with others' feelings.", PersonalityDimension.AGREEABLENESS));
+            questionQueue.add(new Question(22, "I am not interested in other people's problems.", PersonalityDimension.AGREEABLENESS));
+        
+            // Conscientiousness Questions
+            questionQueue.add(new Question(3, "I am always prepared.", PersonalityDimension.CONSCIENTIOUSNESS));
+            questionQueue.add(new Question(8, "I leave my belongings around.", PersonalityDimension.CONSCIENTIOUSNESS));
+            questionQueue.add(new Question(13, "I pay attention to details.", PersonalityDimension.CONSCIENTIOUSNESS));
+            questionQueue.add(new Question(18, "I make a mess of things.", PersonalityDimension.CONSCIENTIOUSNESS));
+            questionQueue.add(new Question(23, "I get chores done right away.", PersonalityDimension.CONSCIENTIOUSNESS));
+        
+            // Neuroticism Questions
+            questionQueue.add(new Question(4, "I get stressed out easily.", PersonalityDimension.NEUROTICISM));
+            questionQueue.add(new Question(9, "I am relaxed most of the time.", PersonalityDimension.NEUROTICISM));
+            questionQueue.add(new Question(14, "I worry about things.", PersonalityDimension.NEUROTICISM));
+            questionQueue.add(new Question(19, "I seldom feel blue.", PersonalityDimension.NEUROTICISM));
+            questionQueue.add(new Question(24, "I am easily disturbed.", PersonalityDimension.NEUROTICISM));
+        
+            // Openness Questions
+            questionQueue.add(new Question(5, "I have a rich vocabulary.", PersonalityDimension.OPENNESS));
+            questionQueue.add(new Question(10, "I have difficulty understanding abstract ideas.", PersonalityDimension.OPENNESS));
+            questionQueue.add(new Question(15, "I have a vivid imagination.", PersonalityDimension.OPENNESS));
+            questionQueue.add(new Question(20, "I am not interested in abstract ideas.", PersonalityDimension.OPENNESS));
+            questionQueue.add(new Question(25, "I have excellent ideas.", PersonalityDimension.OPENNESS));
+        }
+        
     
     public void addQuestion(Question question) {
         questionQueue.add(question);
