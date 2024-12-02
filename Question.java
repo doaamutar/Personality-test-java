@@ -1,4 +1,4 @@
-class Question {
+public class Question {
     private int id;
     private String text;
     private int answer;
@@ -11,7 +11,6 @@ class Question {
         this.answer = 0;
     }
     
-    // Getters and setters
     public int getId() { return id; }
     public String getText() { return text; }
     public int getAnswer() { return answer; }
