@@ -1,15 +1,3 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.Stack;
-
 import java.util.*;
 
 public class PersonalityTestSystem {
@@ -53,39 +41,48 @@ public class PersonalityTestSystem {
         System.out.println("User " + userId + " registered successfully!");
     }
     
-    public void takeTest(String userId, Scanner scanner) {
-        if (!users.contains(userId)) {
-            System.out.println("Error: User not found. Please register first.");
-            return;
+   public void takeTest(String userId, Scanner scanner) {
+    if (!users.contains(userId)) {
+        System.out.println("Error: User not found. Please register first.");
+        return;
+    }
+
+    TestResult result = new TestResult(userId);
+    List<Question> questionList = new ArrayList<>(questionQueue); // Shallow copy of questions
+    int currentQuestion = 0;
+
+    System.out.println("\nStarting personality test...");
+    System.out.println("Rate each statement from 1 (Strongly Disagree) to 5 (Strongly Agree)");
+    System.out.println("Use 'n' for next question, 'p' for previous question, or 'q' to quit\n");
+
+    while (true) {
+        if (currentQuestion < 0) currentQuestion = 0; // Prevent negative index
+        if (currentQuestion >= questionList.size()) {
+            System.out.println("\nYou have completed the test!");
+            break;
         }
-        
-        TestResult result = new TestResult(userId);
-        List<Question> questionList = new ArrayList<>(questionQueue);
-        int currentQuestion = 0;
-        
-        System.out.println("\nStarting personality test...");
-        System.out.println("Rate each statement from 1 (Strongly Disagree) to 5 (Strongly Agree)");
-        System.out.println("Use 'n' for next question, 'p' for previous question, or 'q' to quit\n");
-        
-        while (currentQuestion >= 0 && currentQuestion < questionList.size()) {
-            Question q = questionList.get(currentQuestion);
-            System.out.println("Question " + (currentQuestion + 1) + "/" + questionList.size());
-            System.out.println(q.getText());
-            if (q.getAnswer() > 0) {
-                System.out.println("Current answer: " + q.getAnswer());
-            }
-            System.out.print("Your answer (1-5, n/p/q): ");
-            
-            String input = scanner.nextLine().trim().toLowerCase();
-            
-            if (input.equals("n")) {
+
+        Question q = questionList.get(currentQuestion);
+        System.out.println("Question " + (currentQuestion + 1) + "/" + questionList.size());
+        System.out.println(q.getText());
+        if (q.getAnswer() > 0) {
+            System.out.println("Current answer: " + q.getAnswer());
+        }
+        System.out.print("Your answer (1-5, n/p/q): ");
+
+        String input = scanner.nextLine().trim().toLowerCase();
+
+        switch (input) {
+            case "n":
                 currentQuestion++;
-            } else if (input.equals("p")) {
+                break;
+            case "p":
                 currentQuestion--;
-            } else if (input.equals("q")) {
+                break;
+            case "q":
                 System.out.println("Test cancelled.");
                 return;
-            } else {
+            default:
                 try {
                     int answer = Integer.parseInt(input);
                     if (answer >= 1 && answer <= 5) {
@@ -97,15 +94,16 @@ public class PersonalityTestSystem {
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid input. Please try again.");
                 }
-            }
         }
-        
-        // Calculate and save results
-        calculateResults(result, questionList);
-        testHistory.get(userId).add(result);
-        System.out.println("\nTest completed! Here are your results:\n");
-        System.out.println(result);
     }
+
+    // Calculate and save results
+    calculateResults(result, questionList);
+    testHistory.get(userId).add(result);
+    System.out.println("\nTest completed! Here are your results:\n");
+    System.out.println(result);
+}
+
     
     private void calculateResults(TestResult result, List<Question> questions) {
         Map<PersonalityDimension, Integer> scores = new EnumMap<>(PersonalityDimension.class);
