@@ -75,68 +75,84 @@ public class PersonalityTestSystem {
         System.out.println("User " + userId + " registered successfully!");
     }
     
-   public void takeTest(String userId, Scanner scanner) {
-    if (!users.contains(userId)) {
-        System.out.println("Error: User not found. Please register first.");
-        return;
-    }
-
-    TestResult result = new TestResult(userId);
-    List<Question> questionList = new ArrayList<>(questionQueue); // Shallow copy of questions
-    int currentQuestion = 0;
-
-    System.out.println("\nStarting personality test...");
-    System.out.println("Rate each statement from 1 (Strongly Disagree) to 5 (Strongly Agree)");
-    System.out.println("Use 'n' for next question, 'p' for previous question, or 'q' to quit\n");
-
-    while (true) {
-        if (currentQuestion < 0) currentQuestion = 0; // Prevent negative index
-        if (currentQuestion >= questionList.size()) {
-            System.out.println("\nYou have completed the test!");
-            break;
+    public void takeTest(String userId, Scanner scanner) {
+        if (!users.contains(userId)) {
+            System.out.println("Error: User not found. Please register first.");
+            return;
         }
-
-        Question q = questionList.get(currentQuestion);
-        System.out.println("Question " + (currentQuestion + 1) + "/" + questionList.size());
-        System.out.println(q.getText());
-        if (q.getAnswer() > 0) {
-            System.out.println("Current answer: " + q.getAnswer());
-        }
-        System.out.print("Your answer (1-5, n/p/q): ");
-
-        String input = scanner.nextLine().trim().toLowerCase();
-
-        switch (input) {
-            case "n":
-                currentQuestion++;
+    
+        TestResult result = new TestResult(userId);
+        List<Question> questionList = new ArrayList<>(questionQueue); // Shallow copy of questions
+        int currentQuestion = 0;
+    
+        System.out.println("\nStarting personality test...");
+        System.out.println("Rate each statement from 1 (Strongly Disagree) to 5 (Strongly Agree)");
+        System.out.println("Use 'n' for next question, 'p' for previous question, or 'q' to quit\n");
+    
+        while (true) {
+            // Prevent invalid indices
+            if (currentQuestion < 0) currentQuestion = 0;
+            if (currentQuestion >= questionList.size()) {
+                System.out.println("\nYou have completed the test!");
                 break;
-            case "p":
-                currentQuestion--;
-                break;
-            case "q":
-                System.out.println("Test cancelled.");
-                return;
-            default:
-                try {
-                    int answer = Integer.parseInt(input);
-                    if (answer >= 1 && answer <= 5) {
-                        q.setAnswer(answer);
+            }
+        
+            // Retrieve current question
+            Question q = questionList.get(currentQuestion);
+    
+            // Add line spacing and separator for better readability
+            System.out.println("\n----------------------------------------");
+            System.out.println("Question " + (currentQuestion + 1) + "/" + questionList.size());
+            System.out.println(q.getText());
+            if (q.getAnswer() > 0) { // Show answer if it has been previously set
+                System.out.println("Current answer: " + q.getAnswer());
+            }
+            System.out.println("----------------------------------------");
+    
+            // Prompt for user input
+            System.out.print("Your answer (1-5, n/p/q): ");
+            String input = scanner.nextLine().trim().toLowerCase();
+        
+            switch (input) {
+                case "n": // Move to the next question
+                    if (currentQuestion < questionList.size() - 1) {
                         currentQuestion++;
                     } else {
-                        System.out.println("Please enter a number between 1 and 5.");
+                        System.out.println("You are on the last question.");
                     }
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid input. Please try again.");
-                }
+                    break;
+                case "p": // Move to the previous question
+                    if (currentQuestion > 0) {
+                        currentQuestion--;
+                    } else {
+                        System.out.println("You are on the first question.");
+                    }
+                    break;
+                case "q": // Quit the test
+                    System.out.println("Test cancelled.");
+                    return;
+                default: // Handle answers
+                    try {
+                        int answer = Integer.parseInt(input);
+                        if (answer >= 1 && answer <= 5) {
+                            q.setAnswer(answer); // Save the answer in the current question
+                            System.out.println("\nAnswer saved.");
+                            currentQuestion++; // Move to the next question automatically
+                        } else {
+                            System.out.println("Please enter a number between 1 and 5.");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input. Please try again.");
+                    }
+            }
         }
+    
+        // Calculate and save results
+        calculateResults(result, questionList);
+        testHistory.get(userId).add(result);
+        System.out.println("\nTest completed! Here are your results:\n");
+        System.out.println(result);
     }
-
-    // Calculate and save results
-    calculateResults(result, questionList);
-    testHistory.get(userId).add(result);
-    System.out.println("\nTest completed! Here are your results:\n");
-    System.out.println(result);
-}
 
     
     private void calculateResults(TestResult result, List<Question> questions) {
